@@ -2,6 +2,49 @@
 
 All notable changes to the SRTdash Admin Dashboard template are documented here.
 
+## Unreleased
+
+### Dependencies
+
+There is no package manager here — libraries are vendored under
+`srtdash/assets/` or pinned by CDN URL — so each was checked against its
+current published version by hand.
+
+Updated:
+
+- Font Awesome 7.1.0 → 7.3.1 (`fontawesome.min.css` plus all four webfonts)
+- Swiper 12.1.0 → 14.2.0 (`swiper-bundle.min.css` / `.js`)
+- FullCalendar 6.1.15 → 6.1.21 (CDN pin)
+- Highcharts 12.5.0 → 13.0.2, and moved off `code.highcharts.com` — see below
+
+Already current, left alone: Bootstrap 5.3.8, MetisMenuJS 1.4.0,
+Chart.js 4.5.1, ZingChart 2.9.16-1, simple-datatables 10.x.
+
+### Fixed
+
+- **Charts on `index3.html` were dead in production.** `code.highcharts.com`
+  rejects any request without a `Referer` header and returned 403 for
+  `highcharts.js`, `exporting.js` and `export-data.js` — confirmed against the
+  live demo, not just locally, where `window.Highcharts` was undefined. Now
+  served from jsDelivr, which has no such requirement.
+
+### Not done, and why
+
+- **FullCalendar was not taken to 7.x.** Version 7 drops the UMD global build
+  (`index.global.min.js` is a 404) and ships ESM-only with subpath exports.
+  This template has no build step and initialises the calendar with
+  `new FullCalendar.Calendar(...)` from a plain `<script>` tag, so v7 would
+  need `calendar.html` rewritten around an import map. Pinned to the latest
+  6.x instead. Taking v7 is a deliberate migration, not a version bump.
+
+### Verified
+
+Swiper crossed two majors and FullCalendar one, so behaviour was checked
+rather than assumed: carousel initialises with working pagination bullets,
+the calendar renders its toolbar and day grid, Highcharts draws, and
+`index.html`, `index3.html`, `calendar.html` and `datatable.html` all load
+with no JavaScript errors and no failed requests.
+
 ## v2.1.0
 
 ### New Pages
